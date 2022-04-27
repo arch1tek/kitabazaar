@@ -1,0 +1,10 @@
+<html>
+<body>
+    <form method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        {{productform.as_p}}
+        {{photoform.as_p}}
+        <input type="submit" value="register">
+    </form>
+</body>
+</html>

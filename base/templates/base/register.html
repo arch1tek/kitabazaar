@@ -1,0 +1,13 @@
+
+<html>
+<body>
+    <h1>register</h1>
+<form method="POST">
+    {%csrf_token%}
+    {{register_view_form}}
+    {{profile_form}}
+    <input type="submit" value="register">
+</form>
+<p>already have an account?</p><a href="{% url 'login'%}">login</a>
+</body>
+</html>

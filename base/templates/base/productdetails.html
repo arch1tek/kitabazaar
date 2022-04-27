@@ -1,0 +1,26 @@
+<html>
+<body>
+    <h1>{{product.bookID.bookName}}, edition: {{product.bookID.edition}}</h1>
+<br>
+<p>
+    <form method="POST">
+    {%csrf_token%}
+    price: {{product.price}}
+    <br>
+    author: {{product.bookID.author_names}}
+    <br>
+    courses: {{product.bookID.course_names}}
+    <br>
+    seller: {{product.sellerID.user.firstName}} {{product.sellerID.user.firstName}}, ID: {{product.sellerID.bitsID}}
+    <br>
+    photos:
+    {%for pphoto in product.product_photos %}
+            <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
+    {%endfor%}
+    {{transaction}}
+    <input type="submit" value="buy">
+    </form>
+    
+</p>
+</body>
+</html>

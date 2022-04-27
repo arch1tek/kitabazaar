@@ -1,0 +1,45 @@
+<html>
+<body>
+    <h1>KitaBazaar</h1>
+
+    {%if request.user.is_authenticated%}
+        <p>hi {{request.user}}</p>
+        <a href="{% url 'logout'%}">Logout</a>
+        <br>
+        <a href="{% url 'enlist'%}">Enlist product</a>
+        <br>
+        <a href="{% url 'myproducts'%}">my products</a>
+        <p>
+            <form method="get">
+                Price: 
+                <input type="number" name="min_price" maxlength="4" size="3" value={{filter_price1}}>
+                to <input type="number" name="max_price" maxlength="4" size="3" value={{filter_price2}}> 
+                <select name="branch" >
+                    {% for branch in branchlist %}
+                    <option value={{branch}}>{{branch}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Go">
+            </form>
+        </p>
+        
+        {% for product in productslist %}
+        <div><p>
+            BOOK:<a href="">{{product.bookID.bookName}} edition: {{product.bookID.edition}}</a>
+            <br>
+            WRITTEN BY: {{product.bookID.author_names}}
+            <br>
+            PRICE: Rs {{product.price}}
+            <br>
+            {%for pphoto in product.product_photos|slice:":1" %}
+                <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
+            {%endfor%}
+            <a href="{% url 'productdetails' product.id %}">details</a>
+        </p></div>
+        {% endfor %}
+    {% else %}
+        <a href="/login">Login</a>
+    {%endif%}
+    
+</body>
+</html>
