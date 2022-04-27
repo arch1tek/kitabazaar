@@ -1,19 +1,51 @@
+{% extends 'base/main.html' %}
+{% block content %}
+
 <html>
     <body>
+        <div class="header-bar">
+            <h1>
+                MY ENLISTED PRODUCTS
+            </h1>
+        </div>
         {%csrf_token%}
         {% for product in myproductslist %}
-        <div><p>
-            BOOK:<a href="">{{product.bookID.bookName}} edition: {{product.bookID.edition}}</a>
-            <br>
-            WRITTEN BY: {{product.bookID.author_names}}
-            <br>
-            PRICE: Rs {{product.price}}
-            <br>
-            {%for pphoto in product.product_photos|slice:":1" %}
-                <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
-            {%endfor%}
-            <a href="{% url 'deleteproduct' product.id %}">delete</a>
-        </p></div>
+            {% if product.sold %}
+            <div class="sold">
+                <h3>
+                    SOLD
+                </h3>
+                <p>
+                BOOK:<a href="">{{product.bookID.bookName}} edition: {{product.bookID.edition}}</a>
+                <br>
+                WRITTEN BY: {{product.bookID.author_names}}
+                <br>
+                PRICE: Rs {{product.price}}
+                <br>
+                {%for pphoto in product.product_photos|slice:":1" %}
+                    <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
+                {%endfor%}
+                <a href="{% url 'deleteproduct' product.id %}">delete</a>
+                </p>
+            </div>
+            {% else %}
+            <div class="unsold">
+                <p>
+                BOOK:<a href="">{{product.bookID.bookName}} edition: {{product.bookID.edition}}</a>
+                <br>
+                WRITTEN BY: {{product.bookID.author_names}}
+                <br>
+                PRICE: Rs {{product.price}}
+                <br>
+                {%for pphoto in product.product_photos|slice:":1" %}
+                    <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
+                {%endfor%}
+                <a href="{% url 'deleteproduct' product.id %}">Delete this item</a>
+                </p>
+            </div>
+            {% endif %}
         {%endfor%}
     </body>
 </html>
+
+{% endblock content %}
