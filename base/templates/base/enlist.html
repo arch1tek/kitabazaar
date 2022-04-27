@@ -1,13 +1,24 @@
+{% extends 'base/main.html' %}
+{% block content %}
+
 <html>
 <body>
-    <form method="POST" enctype="multipart/form-data">
-        {%csrf_token%}
-        {{productform.as_p}}
-        <br>
-        book not in list? 
-        <a href="{% url 'createbook'%}">add here</a>
-        {{photoform.as_p}}
-        <input type="submit" value="register">
-    </form>
+    <div class="header-bar">
+        <h1>Enlist your product</h1>
+    </div>
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{productform.as_p}}
+            <br>
+            Book not in list? 
+            <a href="{% url 'createbook'%}">Add here</a>
+            {{photoform.as_p}}
+            <input class="button" type="submit" value="Register">
+        </form>
+    </div>
+    
 </body>
 </html>
+
+{% endblock content %}

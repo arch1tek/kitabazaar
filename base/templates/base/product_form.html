@@ -1,9 +1,17 @@
+{% extends 'base/main.html' %}
+{% block content %}
+
 <html>
 <body>
-    <form method="POST" enctype="multipart/form-data">
-        {%csrf_token%}
-        {{form.as_p}}
-        <input type="submit" value="update product">
-    </form>
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form.as_p}}
+            <input class="button" type="submit" value="Update Product">
+        </form>
+    </div>
+    
 </body>
 </html>
+
+{% endblock content %}

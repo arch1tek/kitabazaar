@@ -1,13 +1,23 @@
+{% extends 'base/main.html' %}
+{% block content %}
+
 <html>
 <body>
-    <form method="POST" enctype="multipart/form-data">
-        {%csrf_token%}
-        {{form.as_p}}
-        <input type="submit" value="register">
-    </form>
-    <br>
-    cannot find author? <a href="{% url 'createauthor' %}">add author</a>
-    <br>
-    cannot find course? <a href="{% url 'createcourse' %}">add course</a>
+    <div class="header-bar">
+        <h1>Add a new Book</h1>
+    </div>
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form.as_p}}
+            <input class="button" type="submit" value="Register">
+        </form>
+        <br>
+        Cannot find the author? <a href="{% url 'createauthor' %}">Add Author</a>
+        <br>
+        Cannot find the course? <a href="{% url 'createcourse' %}">Add Course</a>
+    </div>
 </body>
 </html>
+
+{% endblock content %}
