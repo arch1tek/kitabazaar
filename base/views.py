@@ -15,7 +15,6 @@ from django.template.context_processors import csrf
 from django.views.generic.detail import DetailView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from .filters import ProductFilter
 
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
