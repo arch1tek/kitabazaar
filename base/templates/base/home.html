@@ -1,31 +1,77 @@
+{% extends 'base/main.html' %}
+{% block content %}
+
 <html>
 <body>
-    <h1>KitaBazaar</h1>
+    <div class="header-bar">
+        <h1>KitaBazaar</h1>
+    </div>
 
-    {%if request.user.is_authenticated%}
-        <p>hi {{request.user}}</p>
-        <a href="{% url 'logout'%}">Logout</a>
-        <br>
-        <a href="{% url 'enlist'%}">Enlist product</a>
-        <br>
-        <a href="{% url 'myproducts'%}">my products</a>
+    <div class="card-body">
+        {%if request.user.is_authenticated%}
+        <p>Welcome {{request.user}} !</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="hyperlink">
+                        <a href="{% url 'logout'%}">Logout</a>
+                    </div>
+                </td>
+                <td>
+                    <div class="hyperlink">
+                        <a href="{% url 'enlist'%}">Enlist product</a>
+                    </div>
+                </td>
+                <td>
+                    <div class="hyperlink">
+                        <a href="{% url 'myproducts'%}">My Enlisted Products</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
         <p>
             <form method="get">
-                Price: 
-                <input type="number" name="min_price" maxlength="4" size="3" value={{filter_price1}}>
-                to <input type="number" name="max_price" maxlength="4" size="3" value={{filter_price2}}> 
-                <select name="branch" >
-                    {% for branch in branchlist %}
-                    <option value={{branch}}>{{branch}}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Go">
+                SEARCH BY:
+                <br>
+                <table style="margin: 10px;">
+                    <tr>
+                        <td>
+                            Price:
+                        </td>
+                        <td>
+                            <input class="button" type="number" name="min_price" maxlength="4" size="3" value={{filter_price1}}>
+                        </td>
+                        <td>
+                             to
+                        </td>
+                        <td>
+                            <input class="button" type="number" name="max_price" maxlength="3" size="2" value={{filter_price2}}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Branch:
+                        </td>
+                        <td>
+                            <select name="branch" >
+                                {% for branch in branchlist %}
+                                <option value={{branch}}>{{branch}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input class="button" type="submit" value="Go">
+                        </td>
+                    </tr>
+                </table>
             </form>
         </p>
         
         {% for product in productslist %}
-        <div><p>
-            BOOK:<a href="">{{product.bookID.bookName}} edition: {{product.bookID.edition}}</a>
+        <div class="unsold"><p>
+            BOOK:<a href="">{{product.bookID.bookName}}</a>
+            <br>
+            Edition: {{product.bookID.edition}}
             <br>
             WRITTEN BY: {{product.bookID.author_names}}
             <br>
@@ -34,12 +80,15 @@
             {%for pphoto in product.product_photos|slice:":1" %}
                 <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
             {%endfor%}
-            <a href="{% url 'productdetails' product.id %}">details</a>
+            <a href="{% url 'productdetails' product.id %}">Details</a>
         </p></div>
         {% endfor %}
     {% else %}
         <a href="/login">Login</a>
     {%endif%}
+    </div>
     
 </body>
 </html>
+
+{% endblock content %}

@@ -4,7 +4,7 @@
 <html>
     <body>
         <div class="header-bar">
-            <h1>
+            <h1 font-family="Arial">
                 MY ENLISTED PRODUCTS
             </h1>
         </div>
@@ -31,7 +31,9 @@
             {% else %}
             <div class="unsold">
                 <p>
-                BOOK:<a href="">{{product.bookID.bookName}} edition: {{product.bookID.edition}}</a>
+                BOOK:<a href="">{{product.bookID.bookName}}</a>
+                <br>
+                Edition: {{product.bookID.edition}}</a>
                 <br>
                 WRITTEN BY: {{product.bookID.author_names}}
                 <br>
