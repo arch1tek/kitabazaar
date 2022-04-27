@@ -3,6 +3,9 @@
     <form method="POST" enctype="multipart/form-data">
         {%csrf_token%}
         {{productform.as_p}}
+        <br>
+        book not in list? 
+        <a href="{% url 'createbook'%}">add here</a>
         {{photoform.as_p}}
         <input type="submit" value="register">
     </form>
