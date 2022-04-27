@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView, DeleteView, UpdateView
+from django.views.generic.edit import FormView, DeleteView, UpdateView, CreateView
 from django.contrib.auth.views import LoginView
 from django.forms import ModelForm, Form, modelformset_factory
 from django.template.context_processors import csrf
@@ -241,3 +241,18 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
     model = Product
     fields = ['conditionofbook', 'price', 'bookID']
     success_url = reverse_lazy('myproducts')
+    
+    
+class CreateBook(CreateView):
+    model = Book
+    fields='__all__'
+    
+class CreateAuthor(CreateView):
+    model = Author
+    fields='__all__'
+    
+class CreateCourse(CreateView):
+    model = Course
+    fields='__all__'
+        
+    

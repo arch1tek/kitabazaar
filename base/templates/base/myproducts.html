@@ -25,7 +25,6 @@
                 {%for pphoto in product.product_photos|slice:":1" %}
                     <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
                 {%endfor%}
-                <a href="{% url 'deleteproduct' product.id %}">delete</a>
                 </p>
             </div>
             {% else %}
@@ -41,6 +40,7 @@
                     <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
                 {%endfor%}
                 <a href="{% url 'deleteproduct' product.id %}">Delete this item</a>
+                <a href="{% url 'updateproduct' product.id %}">Update this item</a>
                 </p>
             </div>
             {% endif %}
