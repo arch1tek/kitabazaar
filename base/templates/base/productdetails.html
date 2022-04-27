@@ -11,17 +11,61 @@
     <p>
         <form method="POST">
         {%csrf_token%}
-        Price: {{product.price}}
-        <br>
-        Author: {{product.bookID.author_names}}
-        <br>
-        Courses: {{product.bookID.course_names}}
-        <br>
-        Edition number: {{product.bookID.edition}}
-        <br>
-        Seller: {{product.sellerID.user.firstName}}, ID: {{product.sellerID.bitsID}}
-        <br>
-        Photos:
+        <table>
+        <tr>
+            <td>
+                Price: 
+            </td>
+            <td>
+                {{product.price}}
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                Author: 
+            </td>
+            <td>
+                {{product.bookID.author_names}}
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                Courses: 
+            </td>
+            <td>
+                {{product.bookID.course_names}}
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                Edition: 
+            </td>
+            <td>
+                {{product.bookID.edition}}
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                Seller: 
+            </td>
+            <td>
+                {{product.sellerID.user.username}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                ID: 
+            </td>
+            <td>
+                {{product.sellerID.bitsID}}
+            </td>
+        </tr>
+        </table>
+       
         {%for pphoto in product.product_photos %}
                 <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
         {%endfor%}

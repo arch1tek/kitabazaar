@@ -26,17 +26,30 @@ from .models import *
 def homePage(request):
     productslist=Product.objects.filter(sold=False)
     branchlist=Branch.objects.all()
+    courselist=Course.objects.all()
+    filter_course=None
+    show_course=None
+    filter_bookname=None
+    show_bookname=''
+    filter_author=None
+    show_author=''
     filter_price1=None
+    showprice1=None
     filter_price2=None
+    showprice2=None
     print(request)
     if request.method=='GET':
         if 'min_price' in request.GET:
             filter_price1 = request.GET['min_price']
+            showprice1=filter_price1
             if filter_price1=='':
+                showprice1=None
                 filter_price1=0
         if 'max_price' in request.GET:
             filter_price2 = request.GET['max_price']
+            showprice2=filter_price2
             if filter_price2=='':
+                showprice2=None
                 filter_price2=productslist.aggregate(Max('price'))
                 filter_price2=filter_price2['price__max']
         print (filter_price1)
@@ -47,9 +60,43 @@ def homePage(request):
             if request.GET['branch']!=None:
                 filterbranch=request.GET['branch']
                 print(filterbranch)
-                productslist=productslist.filter(bookID__belongstocourse__branch__branchName=filterbranch)
-            
+                
+                if filterbranch=='':
+                    productslist=productslist
+                else:
+                    productslist=productslist.filter(bookID__belongstocourse__branch__branchName=filterbranch)
+                    courselist=courselist.filter(branch=filterbranch)
+                    
+        if 'course' in request.GET:
+            if request.GET['course']!=None:
+                filter_course=request.GET['course']
+                
+                if filter_course=='':
+                    productslist=productslist
+                else:
+                    productslist=productslist.filter(bookID__belongstocourse__courseID=filter_course)
         
+        if 'bookname' in request.GET:
+            if request.GET['bookname']!=None:
+                filter_bookname=request.GET['bookname']
+                
+                if filter_bookname=='':
+                    productslist=productslist
+                    show_bookname=''
+                else:
+                    show_bookname=filter_bookname
+                    productslist=productslist.filter(bookID__bookName__contains=filter_bookname)
+        if 'author' in request.GET:
+            if request.GET['author']!=None:
+                filter_author=request.GET['author']
+                
+                if filter_author=='':
+                    productslist=productslist
+                    show_author=''
+                else:
+                    show_author=filter_author
+                    productslist=productslist.filter(bookID__writtenby__authorName__contains=filter_author)
+
     else:
         message = 'You submitted nothing!'
     
@@ -58,9 +105,12 @@ def homePage(request):
     args={}
     args.update(csrf(request))
     args['productslist']=productslist
-    args['filter_price1']=filter_price1
-    args['filter_price2']=filter_price2
+    args['showprice1']=showprice1
+    args['showprice2']=showprice2
     args['branchlist']=branchlist
+    args['courselist']=courselist
+    args['show_bookname']=show_bookname
+    args['show_author']=show_author
     print(args)
     return render(request, "base/home.html", args)
 
@@ -154,7 +204,7 @@ class RegisterView(UserCreationForm):
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        exclude = ['user']
+        exclude = ['user', 'wallet']
 
 def newUser(request):
     if request.method=="POST":
@@ -207,6 +257,8 @@ def buyproduct(request, **kwargs):
         transaction.save()
         product.sold=True
         product.save()
+        Profile.objects.filter(user=request.user).update(wallet=Profile.objects.get(user=request.user).wallet-product.price)
+        Profile.objects.filter(user=product.sellerID).update(wallet=Profile.objects.get(user=product.sellerID).wallet+product.price)
         return redirect('home')
     else:
         
@@ -254,5 +306,11 @@ class CreateAuthor(CreateView):
 class CreateCourse(CreateView):
     model = Course
     fields='__all__'
-        
+    
+def ProfileView(request):
+    profile=Profile.objects.get(user=request.user)
+    args={}
+    args.update(csrf(request))
+    args['profile']=profile
+    return render(request, "base/profiledetails.html", args)
     

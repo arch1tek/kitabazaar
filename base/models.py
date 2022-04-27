@@ -31,6 +31,7 @@ class Profile(models.Model):
     bitsID= models.CharField(max_length=13, primary_key=True)
     hostelName=models.ForeignKey(Hostel, on_delete=models.CASCADE)
     roomNumber=models.IntegerField()
+    wallet=models.IntegerField(default=1000)
 
     def __str__(self):
         return self.bitsID
@@ -60,7 +61,7 @@ class Book(models.Model):
 
     def course_names(self):
         return ', '.join([(a.courseID+": "+a.courseName) for a in self.belongstocourse.all()])
-    course_names.short_description = "Author Names"
+    course_names.short_description = "Course Names"
 
     def author_names(self):
         return ', '.join([a.authorName for a in self.writtenby.all()])
