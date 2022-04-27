@@ -15,5 +15,6 @@ urlpatterns = [
     path('createbook/', CreateBook.as_view(), name='createbook'),
     path('createauthor/', CreateAuthor.as_view(), name='createauthor'),
     path('createcourse/', CreateCourse.as_view(), name='createcourse'),
+    path('profiledetails/', ProfileView, name='profiledetails'),
     path('', homePage, name='home'),
 ]

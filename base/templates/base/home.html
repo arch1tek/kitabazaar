@@ -9,7 +9,7 @@
 
     <div class="card-body">
         {%if request.user.is_authenticated%}
-        <p>Welcome {{request.user}} !</p>
+        <p>Welcome <a href="{% url 'profiledetails'%}">{{request.user}}</a> !</p>
         <table>
             <tr>
                 <td>
@@ -36,16 +36,32 @@
                 <table style="margin: 10px;">
                     <tr>
                         <td>
+                            Book:
+                        </td>
+                        <td>
+                            <input class="button" type="text" name="bookname" value={{show_bookname}}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Author:
+                        </td>
+                        <td>
+                            <input class="button" type="text" name="author" value={{show_author}}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             Price:
                         </td>
                         <td>
-                            <input class="button" type="number" name="min_price" maxlength="4" size="3" value={{filter_price1}}>
+                            <input class="button" type="number" name="min_price" maxlength="4" size="3" value={{showprice1}} placeholder="min">
                         </td>
                         <td>
-                             to
+                            
                         </td>
                         <td>
-                            <input class="button" type="number" name="max_price" maxlength="3" size="2" value={{filter_price2}}>
+                            <input class="button" type="number" name="max_price" maxlength="3" size="2" value={{showprice2}} placeholder="max">
                         </td>
                     </tr>
                     <tr>
@@ -54,14 +70,33 @@
                         </td>
                         <td>
                             <select name="branch" >
+                                <option value="">-</option>
                                 {% for branch in branchlist %}
                                 <option value={{branch}}>{{branch}}</option>
                                 {% endfor %}
                             </select>
                         </td>
+                       
+                    </tr>
+                    <tr>
+                        <td>
+                            Course:
+                        </td>
+                        <td>
+                            <select name="course" >
+                                <option value="">-</option>
+                                {% for course in courselist %}
+                                <option value={{course.courseID}}>{{course}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                       
+                    </tr>
+                    <tr>
                         <td>
                             <input class="button" type="submit" value="Go">
                         </td>
+                        
                     </tr>
                 </table>
             </form>
@@ -80,6 +115,7 @@
             {%for pphoto in product.product_photos|slice:":1" %}
                 <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
             {%endfor%}
+            <br>
             <a href="{% url 'productdetails' product.id %}">Details</a>
         </p></div>
         {% endfor %}
