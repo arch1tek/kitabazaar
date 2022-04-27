@@ -13,7 +13,7 @@
             {% if product.sold %}
             <div class="sold">
                 <h3>
-                    SOLD
+                    SOLD!!
                 </h3>
                 <p>
                 BOOK:<a href="">{{product.bookID.bookName}} edition: {{product.bookID.edition}}</a>
@@ -29,6 +29,9 @@
             </div>
             {% else %}
             <div class="unsold">
+                <h3>
+                    IN MARKET
+                </h3>
                 <p>
                 BOOK:<a href="">{{product.bookID.bookName}}</a>
                 <br>
@@ -41,8 +44,16 @@
                 {%for pphoto in product.product_photos|slice:":1" %}
                     <img src="{{pphoto.url}}" alt="MISSING JPG" height="100">
                 {%endfor%}
-                <a href="{% url 'deleteproduct' product.id %}">Delete this item</a>
-                <a href="{% url 'updateproduct' product.id %}">Update this item</a>
+                <table style="border-spacing: 20px;">
+                    <tr>
+                        <td>
+                            <a href="{% url 'deleteproduct' product.id %}">Delete this item</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'updateproduct' product.id %}">Update this item</a>
+                        </td>
+                    </tr>
+                </table>
                 </p>
             </div>
             {% endif %}
