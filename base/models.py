@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.forms import fields_for_model
 # Create your models here.
 class Author(models.Model):
-    authorName=models.CharField(max_length=100, verbose_name='author name')
+    authorName=models.CharField(max_length=100, verbose_name='author name', unique=True)
 
     def __str__(self):
         return self.authorName
@@ -19,7 +19,7 @@ class Author(models.Model):
         order_with_respect_to = 'authorName'
 
 class Hostel(models.Model):
-    hostelID=models.CharField(max_length=2, primary_key=True)
+    hostelID=models.CharField(max_length=2, unique=True)
     hostelName=models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -37,14 +37,14 @@ class Profile(models.Model):
         return self.bitsID
 
 class Branch(models.Model):
-    branchName=models.CharField(max_length=100, unique=True, primary_key=True)
+    branchName=models.CharField(max_length=100, unique=True)
     def __str__(self):
         return self.branchName
     class Meta:
         order_with_respect_to = 'branchName'
 
 class Course(models.Model):
-    courseID=models.CharField(primary_key=True, max_length=10)
+    courseID=models.CharField(unique=True, max_length=10)
     courseName=models.CharField(max_length=100)
     branch=models.ForeignKey(Branch, on_delete=models.CASCADE)
     def __str__(self):
@@ -103,6 +103,10 @@ class Product(models.Model):
     def product_photos(self):
         return [a.photo for a in ProductPhotos.objects.filter(productID=self)]
     product_photosshort_description = "product photos"
+    
+    def getcond(self):
+        cond=[" ", "BAD","OK", "GOOD", "NEW"]
+        return cond[self.conditionofbook]
     
     def __str__(self):
         return str(self.sellerID.bitsID) + self.bookID.bookName
