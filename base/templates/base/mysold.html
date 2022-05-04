@@ -1,0 +1,64 @@
+{% extends 'base/main.html' %}
+{% block content %}
+
+<html>
+
+<body>
+    <div class="header-bar">
+        <h1 font-family="Arial">
+            SOLD PRODUCTS
+        </h1>
+    </div>
+    {%csrf_token%}
+    {% for transaction in mysold %}
+    <div class="unsold">
+        <table>
+            <tr>
+                <td>
+                    Book:
+                </td>
+                <td>
+                    {{transaction.productID.bookID.bookName}}
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Price: Rs
+                </td>
+                <td>
+                    {{transaction.productID.price}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Buyer:
+                </td>
+                <td>
+                    {{transaction.buyerID.user.first_name}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Phone:
+                </td>
+                <td>
+                    {{transaction.buyerID.phoneNumber}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    BITS ID:
+                </td>
+                <td>
+                    {{transaction.buyerID.bitsID}}
+                </td>
+            </tr>
+        </table>
+    </div>
+    {%endfor%}
+</body>
+
+</html>
+
+{% endblock content %}

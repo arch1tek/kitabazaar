@@ -18,12 +18,19 @@ from django.contrib.auth.forms import UserCreationForm
 
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import auth
 
 
 
 from .models import *
 # Create your views here.
+
+def logout(request):
+    auth.logout(request)
+    return redirect('home')
+
 def homePage(request):
+    
     productslist=Product.objects.filter(sold=False)
     branchlist=Branch.objects.all()
     courselist=Course.objects.all()
@@ -37,6 +44,7 @@ def homePage(request):
     showprice1=None
     filter_price2=None
     showprice2=None
+    filter_sort=None
     print(request)
     if request.method=='GET':
         if 'min_price' in request.GET:
@@ -65,16 +73,17 @@ def homePage(request):
                     productslist=productslist
                 else:
                     productslist=productslist.filter(bookID__belongstocourse__branch__branchName=filterbranch)
-                    courselist=courselist.filter(branch=filterbranch)
+                    courselist=courselist.filter(branch__branchName=filterbranch)
                     
         if 'course' in request.GET:
             if request.GET['course']!=None:
                 filter_course=request.GET['course']
-                
+                print(filter_course)
                 if filter_course=='':
                     productslist=productslist
                 else:
                     productslist=productslist.filter(bookID__belongstocourse__courseID=filter_course)
+                    print(productslist)
         
         if 'bookname' in request.GET:
             if request.GET['bookname']!=None:
@@ -96,7 +105,16 @@ def homePage(request):
                 else:
                     show_author=filter_author
                     productslist=productslist.filter(bookID__writtenby__authorName__contains=filter_author)
-
+        if 'sort' in request.GET:
+            if request.GET['sort']!=None:
+                filter_sort=request.GET['sort']
+                
+                if filter_sort=='':
+                    productslist=productslist
+                elif filter_sort=='1':
+                    productslist=productslist.order_by('price')
+                elif filter_sort=='0':
+                    productslist=productslist.order_by('-price')
     else:
         message = 'You submitted nothing!'
     
@@ -142,9 +160,11 @@ class UploadProductPhotos(ModelForm):
         exclude=['productID']
         
 
-
 def enlistProduct(request):
-
+    if(request.user.is_authenticated):
+        print('ok')
+    else:
+        return redirect('home')
     ImageFormSet = modelformset_factory(ProductPhotos,
                                         form=UploadProductPhotos, extra=3)
 
@@ -245,6 +265,10 @@ class Transactionform(ModelForm):
         exclude = ['productID','buyerID','time']
 
 def buyproduct(request, **kwargs):
+    if(request.user.is_authenticated):
+        print('ok')
+    else:
+        return redirect('home')
     product=Product.objects.get(id=kwargs['pk'])
     if request.method=="POST":
         
@@ -258,7 +282,7 @@ def buyproduct(request, **kwargs):
         product.sold=True
         product.save()
         Profile.objects.filter(user=request.user).update(wallet=Profile.objects.get(user=request.user).wallet-product.price)
-        Profile.objects.filter(user=product.sellerID).update(wallet=Profile.objects.get(user=product.sellerID).wallet+product.price)
+        Profile.objects.filter(user=product.sellerID.user).update(wallet=product.sellerID.wallet+product.price)
         return redirect('home')
     else:
         
@@ -282,6 +306,10 @@ class DeleteProduct(LoginRequiredMixin, DeleteView):
         return self.model.objects.filter(sellerID=Profile.objects.get(user=owner))
 
 def myProducts(request):
+    if(request.user.is_authenticated):
+        print('ok')
+    else:
+        return redirect('home')
     myproductslist=Product.objects.filter(sellerID=Profile.objects.get(user=request.user))
     args={}
     args.update(csrf(request))
@@ -298,19 +326,53 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
 class CreateBook(CreateView):
     model = Book
     fields='__all__'
+    success_url = reverse_lazy('enlist')
     
 class CreateAuthor(CreateView):
     model = Author
     fields='__all__'
+    success_url = reverse_lazy('enlist')
     
 class CreateCourse(CreateView):
     model = Course
     fields='__all__'
+    success_url = reverse_lazy('createbook')
     
 def ProfileView(request):
+    if(request.user.is_authenticated):
+        print('ok')
+    else:
+        return redirect('home')
     profile=Profile.objects.get(user=request.user)
     args={}
     args.update(csrf(request))
     args['profile']=profile
     return render(request, "base/profiledetails.html", args)
+
+def myOrders(request):
+    if(request.user.is_authenticated):
+        print('ok')
+    else:
+        return redirect('home')
+    myorders=Transaction.objects.filter(buyerID=Profile.objects.get(user=request.user)).order_by('-time')
+    print(myorders)
+    args={}
+    args.update(csrf(request))
+    args['myorders']=myorders
+    return render(request, "base/myorders.html", args)
+
+def mySold(request):
+    if(request.user.is_authenticated):
+        print('ok')
+    else:
+        return redirect('home')
+    mysold=[]
+    for product in Product.objects.filter(sellerID=Profile.objects.get(user=request.user)):
+        mysold+=Transaction.objects.filter(productID=product).order_by('-time')
+    print(mysold)
+    args={}
+    args.update(csrf(request))
+    args['mysold']=mysold
+    return render(request, "base/mysold.html", args)
+    
     
